@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 from openai import OpenAI
 import pyttsx3
 
-client = OpenAI(api_key='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')
+client = OpenAI(api_key='')
 
 class CameraApp:
     def __init__(self, master):
