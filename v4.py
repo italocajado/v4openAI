@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 from openai import OpenAI
 import pyttsx3
 
-client = OpenAI(api_key='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')
+client = OpenAI(api_key='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')
 
 class CameraApp:
     def __init__(self, master):
@@ -21,6 +21,9 @@ class CameraApp:
         # botão para tirar a foto
         self.btn_capture = Button(master, text="Capturar", command=self.capture)
         self.btn_capture.pack()
+        
+        self.descriptionText = Text(master, height = 10, width = 100)
+        self.descriptionText.pack(padx= 5, pady= 5)
 
     def update(self):
         ret, frame = self.cap.read()
@@ -35,14 +38,14 @@ class CameraApp:
         self.master.after(10, self.update)
 
     def capture(self):
-      ret, frame = self.cap.read()
+        ret, frame = self.cap.read()
 
-      if ret:
-        # Salvando a imagem capturada
-        cv2.imwrite("temp_image.jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-        self.cap.release()
-        # Chamando a função para enviar a imagem para descrição
-        self.send_image()
+        if ret:
+            # Salvando a imagem capturada sem conversão de cores
+            cv2.imwrite("temp_image.jpg", frame)  # Salva a imagem em BGR
+            self.cap.release()
+            # Chamando a função para enviar a imagem para descrição
+            self.send_image()
 
 
     def send_image(self):
@@ -74,8 +77,13 @@ class CameraApp:
         )
 
         # Obtendo a descrição da imagem
-        description = response.choices[0]
-        print("Descrição da imagem:", description)
+        if response.choices[0].message:
+            description = response.choices[0].message.content
+        else:
+            description = "Não foi possivel  obter uma descrição."
+        print("Descrição da imagem: ", description)
+        self.descriptionText.delete(1.0, END)
+        self.descriptionText.insert(END, description)
 
         # Convertendo texto em fala
         self.convert_text_to_speech(description)
