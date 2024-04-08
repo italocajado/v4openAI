@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 from openai import OpenAI
 import pyttsx3
 
-client = OpenAI(api_key='')
 
 class CameraApp:
     def __init__(self, master):
@@ -63,7 +62,7 @@ class CameraApp:
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "descreva essa imagem?"},
+                        {"type": "text", "text": "descreva essa imagem de forma resumida em uma frase. depois descreva de forma detalhada. separe as dresdicões em trecho 1 e trecho 2"},
                         {
                             "type": "image_url",
                             "image_url": {
